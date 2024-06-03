@@ -1,0 +1,95 @@
+package poo_tp;
+
+import javax.swing.JOptionPane;
+import java.util.LinkedList;
+
+public class Main {
+    public static void main(String[] args) {
+        GestorEquipos gestorEquipos = new GestorEquipos();
+
+        
+        Jugador jugador1 = new Jugador("Rafael Nadal", 35);
+        Jugador jugador2 = new Jugador("Novak Djokovic", 34);
+        Jugador jugador3 = new Jugador("Roger Federer", 39);
+        Jugador jugador4 = new Jugador("Andy Murray", 34);
+
+      
+        Equipo equipo1 = new Equipo("Equipo A", "Ciudad A");
+        equipo1.agregarJugador(jugador1);
+        equipo1.agregarJugador(jugador2);
+
+        Equipo equipo2 = new Equipo("Equipo B", "Ciudad B");
+        equipo2.agregarJugador(jugador3);
+        equipo2.agregarJugador(jugador4);
+
+       
+        gestorEquipos.agregarEquipo(equipo1);
+        gestorEquipos.agregarEquipo(equipo2);
+
+        while (true) {
+            String[] options = {"Agregar Equipo", "Eliminar Equipo", "Buscar Equipo", "Mostrar Todos los Equipos", "Simular Partido", "Salir"};
+            int choice = JOptionPane.showOptionDialog(null, "Seleccione una opción:", "Gestor de Equipos",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+            switch (choice) {
+                case 0: // Agregar 
+                    String nombreEquipo = JOptionPane.showInputDialog("Ingrese el nombre del equipo:");
+                    String ciudadEquipo = JOptionPane.showInputDialog("Ingrese la ciudad del equipo:");
+                    Equipo nuevoEquipo = new Equipo(nombreEquipo, ciudadEquipo);
+                    gestorEquipos.agregarEquipo(nuevoEquipo);
+                    JOptionPane.showMessageDialog(null, "Equipo agregado: " + nuevoEquipo);
+                    break;
+
+                case 1: // Eliminar 
+                    nombreEquipo = JOptionPane.showInputDialog("Ingrese el nombre del equipo a eliminar:");
+                    gestorEquipos.eliminarEquipo(nombreEquipo);
+                    JOptionPane.showMessageDialog(null, "Equipo eliminado: " + nombreEquipo);
+                    break;
+
+                case 2: // Buscar 
+                    nombreEquipo = JOptionPane.showInputDialog("Ingrese el nombre del equipo a buscar:");
+                    Equipo equipoBuscado = gestorEquipos.buscarEquipo(nombreEquipo);
+                    if (equipoBuscado != null) {
+                        JOptionPane.showMessageDialog(null, "Equipo encontrado: " + equipoBuscado);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Equipo no encontrado: " + nombreEquipo);
+                    }
+                    break;
+
+                case 3: // Mostrar Todos los Equipos
+                    LinkedList<Equipo> listaEquipos = gestorEquipos.obtenerListaEquipos();
+                    StringBuilder equipos = new StringBuilder("Equipos:\n");
+                    for (Equipo eq : listaEquipos) {
+                        equipos.append(eq.toString()).append("\n");
+                    }
+                    JOptionPane.showMessageDialog(null, equipos.toString());
+                    break;
+
+                case 4: // Simular Partido
+                    String equipo1Nombre = JOptionPane.showInputDialog("Ingrese el nombre del primer equipo:");
+                    String equipo2Nombre = JOptionPane.showInputDialog("Ingrese el nombre del segundo equipo:");
+                    Equipo equipo1Encontrado = gestorEquipos.buscarEquipo(equipo1Nombre);
+                    Equipo equipo2Encontrado = gestorEquipos.buscarEquipo(equipo2Nombre);
+
+                    if (equipo1Encontrado != null && equipo2Encontrado != null) {
+                        String[] resultado = gestorEquipos.jugarPartido(equipo1Encontrado, equipo2Encontrado);
+                        JOptionPane.showMessageDialog(null, resultado[0]);
+                        JOptionPane.showMessageDialog(null, "Resultado final: " + (resultado[1].equals("Empate") ? "Empate" : "Ganador: " + resultado[1]));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Uno o ambos equipos no fueron encontrados.");
+                    }
+                    break;
+
+                case 5: 
+                    JOptionPane.showMessageDialog(null, "¡Gracias por usar el Gestor de Equipos!");
+                    System.exit(0);
+                    break;
+
+                default:
+                    JOptionPane.showMessageDialog(null, "Opción no válida.");
+                    break;
+            }
+        }
+    }
+}
+
